@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h2>{% block title %}Регистрация{% endblock %}</h2>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label for="login">Логин*</label>
+        <input type="text" name="login" id="login" required>
+
+        <label for="password">Пароль*</label>
+        <input type="password" name="password" id="password" required>
+
+        <label for="name">Имя</label>
+        <input type="text" name="name" id="name">
+
+        <label for="surname">Фамилия</label>
+        <input type="text" name="surname" id="surname">
+
+        <label for="dateOfBirth">Дата рождения</label>
+        <input type="date" name="dateOfBirth" id="dateOfBirth">
+
+        <input type="submit" value="Зарегистрироваться">
+    </form>
+{% endblock %}
