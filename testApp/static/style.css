@@ -108,8 +108,14 @@ nav ul li a, nav ul li span, header .action {
   font-style: italic;
 }
 
-.post .body {
+#ques .ans {
   white-space: pre-line;
+  margin-block-start: 0em;
+}
+
+#ques label {
+ font-weight: normal;
+ margin-bottom: 1em;
 }
 
 .content:last-child {
@@ -135,10 +141,6 @@ nav ul li a, nav ul li span, header .action {
 .content textarea {
   min-height: 12em;
   resize: vertical;
-}
-
-.content textarea:active {
-  background: red;
 }
 
 input.danger {

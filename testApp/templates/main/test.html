@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h2>{% block title %}Вопрос {{ question['quesID'] }}{% endblock %}</h2>
+{% endblock %}
+
+{% block content %}
+    <div id="ques">
+        <header>
+            <div>
+                <h3>{{ question['quesCont'] }}</h3>
+            </div>
+        </header>
+        <form method="post">
+            {% if ansData['ansCount'] == 1 and ansData['ansSum'] == 1 %}
+                <input type="text" id={{answers[0]['ansID']}} name="field">
+            {% elif ansData['ansSum'] == 1 %}
+                {% for ans in answers %}
+                    <label for={{ans['ansID']}}>
+                        <input type="radio" id={{ans['ansID']}} name="field" value={{ans['ansID']}}>
+                        {{ ans['ansCont'] }}
+                    </label>
+                {% endfor %}
+            {% else %}
+                {% for ans in answers %}
+                    <label for={{ans['ansID']}}>
+                        <input type="checkbox" id={{ans['ansID']}} name="field" value={{ans['ansID']}}>
+                        {{ ans['ansCont'] }}
+                    </label>
+                {% endfor %}
+            {% endif %}
+            <input type="submit" value="Далее">
+        </form>
+    </div>
+{% endblock %}
+
