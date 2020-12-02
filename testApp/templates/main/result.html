@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h2>{% block title %}Результат{% endblock %}</h2>
+{% endblock %}
+
+{% block content %}
+    <h3>Ваш результат - {{ res }} из 100!</h3>
+    <p>Тест был завершен {{ date }}.</p>
+{% endblock %}

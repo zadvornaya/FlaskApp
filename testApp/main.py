@@ -68,7 +68,7 @@ def test():
     quesCount = quesCount['quesCount']
 
     # Ограничение доступа к пройденным вопросам или вопросам в неверном порядке.
-    if g.user['progress'] > int(quesCount):
+    if g.user['progress'] > quesCount:
         flash("Вы уже завершили тестирование, Поздравляем!"
               .format(g.user['progress'], "http://127.0.0.1:5000" + url_for('index')))
         return redirect(url_for('index'))
@@ -136,9 +136,37 @@ def test():
         db.commit()
 
         if g.user['progress'] + 1 > quesCount:
-            # todo Переходить на страницу результатов
-            return redirect(url_for('index'))
+            return redirect(url_for('main.result'))
         else:
             return redirect(url_for('main.test', ques=currentQues + 1))
 
     return render_template("main/test.html", form=form, question=question, ansData=ansData)
+
+
+@bp.route("/result", methods=("GET", "POST"))
+@login_required
+def result():
+    db = get_db()
+
+    # Получение общего количества вопросов
+    quesCount = db.execute(
+        'SELECT COUNT(quesID) AS quesCount FROM Questions;'
+    ).fetchone()
+    quesCount = quesCount['quesCount']
+
+    # Ограничение доступа к странице результатов.
+    if g.user['progress'] <= int(quesCount):
+        abort(403, "Тестирование еще не завершено."
+              .format(g.user['progress']))
+
+    # Вычисление результата
+    ansData = db.execute(
+        'SELECT SUM(validity) AS ansSum, MAX(answered) AS ansDate FROM Testing JOIN Answers USING(ansID)'
+    ).fetchone()
+    resSum = db.execute(
+        'SELECT SUM(validity) AS resSum FROM Answers'
+    ).fetchone()
+
+    res = int(ansData['ansSum'] / resSum['resSum'] * 100)
+
+    return render_template("main/result.html", res=res, date=ansData['ansDate'])
