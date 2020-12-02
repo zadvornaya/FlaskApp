@@ -13,14 +13,19 @@ body {
 }
 
 h1 {
-  font-family: serif;
   color: #FFFFFF;
-  margin: 1rem 0;
 }
 
-h2, h3, h4, h5, h6 {
-  font-family: serif;
+h2 {
   color: #00BFFF;
+}
+
+h3, h4, h5, h6 {
+  color: black;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: serif;
   margin: 1rem 0;
 }
 

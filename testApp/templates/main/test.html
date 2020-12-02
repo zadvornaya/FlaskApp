@@ -11,26 +11,44 @@
                 <h3>{{ question['quesCont'] }}</h3>
             </div>
         </header>
-        <form method="post">
+
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
             {% if ansData['ansCount'] == 1 and ansData['ansSum'] == 1 %}
-                <input type="text" id={{answers[0]['ansID']}} name="field">
+                <p>
+                    {{ form.textAns.label }}
+                    {{ form.textAns() }}
+                </p>
             {% elif ansData['ansSum'] == 1 %}
-                {% for ans in answers %}
-                    <label for={{ans['ansID']}}>
-                        <input type="radio" id={{ans['ansID']}} name="field" value={{ans['ansID']}}>
-                        {{ ans['ansCont'] }}
-                    </label>
+                {% for subfield in form.radioAns %}
+                    <p>
+                        {{ subfield }}
+                        {{ subfield.label }}
+                    </p>
                 {% endfor %}
             {% else %}
-                {% for ans in answers %}
-                    <label for={{ans['ansID']}}>
-                        <input type="checkbox" id={{ans['ansID']}} name="field" value={{ans['ansID']}}>
-                        {{ ans['ansCont'] }}
-                    </label>
-                {% endfor %}
+                    <p>
+                        {{ form.checkboxAns_0 }}
+                        {{ form.checkboxAns_0.label }}
+                    </p>
+                    <p>
+                        {{ form.checkboxAns_1 }}
+                        {{ form.checkboxAns_1.label }}
+                    </p>
+                    <p>
+                        {{ form.checkboxAns_2 }}
+                        {{ form.checkboxAns_2.label }}
+                    </p>
+                    <p>
+                        {{ form.checkboxAns_3 }}
+                        {{ form.checkboxAns_3.label }}
+                    </p>
+                    <p>
+                        {{ form.checkboxAns_4 }}
+                        {{ form.checkboxAns_4.label }}
+                    </p>
             {% endif %}
-            <input type="submit" value="Далее">
+            <p>{{ form.submit() }}</p>
         </form>
     </div>
 {% endblock %}
-

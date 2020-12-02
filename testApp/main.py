@@ -1,10 +1,42 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, session
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField
+from wtforms.validators import DataRequired
 from werkzeug.exceptions import abort
 
 from testApp.auth import login_required
 from testApp.db import get_db
 
 bp = Blueprint('main', __name__)
+
+
+# Формы для трех видов вопросов.
+class TextForm(FlaskForm):
+    textAns = StringField('Ответ:', validators=[DataRequired()])
+    submit = SubmitField('Далее')
+
+
+def RadioForm(ans, **kwargs):
+    class StaticRadioForm(FlaskForm):
+        pass
+
+    StaticRadioForm.radioAns = RadioField(choices=[(ans[0]['ansID'], ans[0]['ansCont']),
+                                                   (ans[1]['ansID'], ans[1]['ansCont']),
+                                                   (ans[2]['ansID'], ans[2]['ansCont'])])
+    StaticRadioForm.submit = SubmitField('Далее')
+
+    return StaticRadioForm()
+
+
+def CheckboxForm(ans, **kwargs):
+    class StaticCheckboxForm(FlaskForm):
+        pass
+
+    for (i, answer) in enumerate(ans):
+        setattr(StaticCheckboxForm, 'checkboxAns_%d' % i, BooleanField(label=answer['ansCont']))
+    StaticCheckboxForm.submit = SubmitField('Далее')
+
+    return StaticCheckboxForm()
 
 
 @bp.route("/")
@@ -21,22 +53,13 @@ def test():
 
     db = get_db()
 
-    if request.method == "POST":
-        ansID = request.form['field']
-        # todo: Записать ответ на прошлй вопрос в БД. Обновить прогресс пользователя.
-        db.execute(
-            'INSERT INTO Testing (userID, quesID, ansID) VALUES (?, ?, ?)',
-            (g.user['userID'], current_ques, ansID)
-        )
-        db.commit()
-        return redirect(url_for('main.test', ques=current_ques+1))
-
     # Получение формулировки вопроса
     question = db.execute(
         'SELECT * FROM Questions WHERE quesID = ?', (current_ques,)
     ).fetchone()
-    if question is None:
-        abort(404, "Вопрос № {0} не существует.".format(question['quesID']))
+    # todo: Сделать ошибку рабочей
+    # if question is None:
+    #     abort(404, "Вопрос № {0} не существует.".format(question['quesID']))
 
     # Получение ответов
     answers = db.execute(
@@ -46,7 +69,59 @@ def test():
         'SELECT COUNT(validity) AS ansCount, SUM(validity) AS ansSum  FROM Answers WHERE quesID = ?', (current_ques,)
     ).fetchone()
 
-    return render_template("main/test.html", question=question, answers=answers, ansData=ansData)
+    if ansData['ansCount'] == 1 and ansData['ansSum'] == 1:
+        form = TextForm()
+    elif ansData['ansSum'] == 1:
+        form = RadioForm(answers)
+    else:
+        form = CheckboxForm(answers)
+
+    if form.validate_on_submit():
+        flash("Прошло")
+        ansIDs = []
+
+        # Случай с текстовым полем.
+        if ansData['ansCount'] == 1 and ansData['ansSum'] == 1:
+            ansID = None
+            # Если введенное пользователем соответствует правильному ответу, сохряняется ID этого ответа.
+            if form.textAns.data == answers[0]['ansCont']:
+                ansID = answers[0]['ansID']
+            ansIDs.append(ansID)
+
+        # Случай с одним вариантом.
+        elif ansData['ansSum'] == 1:
+            ansIDs.append(form.radioAns.data)
+
+        # Случай с несколькими вариантами.
+        else:
+            # Сохраняются ID отмеченных ответов.
+            if form.checkboxAns_0.data:
+                ansIDs.append(answers[0]['ansID'])
+            if form.checkboxAns_1.data:
+                ansIDs.append(answers[1]['ansID'])
+            if form.checkboxAns_2.data:
+                ansIDs.append(answers[2]['ansID'])
+            if form.checkboxAns_3.data:
+                ansIDs.append(answers[3]['ansID'])
+            if form.checkboxAns_4.data:
+                ansIDs.append(answers[4]['ansID'])
+
+        for ansID in ansIDs:
+            db.execute(
+                'INSERT INTO Testing (userID, quesID, ansID) VALUES (?, ?, ?)',
+                (g.user['userID'], current_ques, ansID)
+            )
+            db.commit()
+
+        db.execute(
+            'UPDATE Users SET progress = ? WHERE userID = ?;',
+            (current_ques + 1, g.user['userID'])
+        )
+        db.commit()
+
+        return redirect(url_for('main.test', ques=current_ques + 1))
+
+    return render_template("main/test.html", form=form, question=question, ansData=ansData)
 
 
 def get_ques(quesID, check_progress=True):
@@ -68,11 +143,6 @@ def get_ques(quesID, check_progress=True):
     #     abort(403)
 
     return ques
-
-
-
-
-
 
 # @bp.route("/test", methods=("GET", "POST"))
 # def test():
