@@ -10,7 +10,7 @@ CREATE TABLE Users (
     name VARCHAR,
     surname VARCHAR,
     dateOfBirth DATE,
-    progress INTEGER(2) DEFAULT 0
+    progress INTEGER(2) DEFAULT 1
 );
 
 CREATE TABLE Questions (
