@@ -5,22 +5,57 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post">
-        <label for="login">Логин*</label>
-        <input type="text" name="login" id="login" required>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
 
-        <label for="password">Пароль*</label>
-        <input type="password" name="password" id="password" required>
+        <p>{{ form.login.label }}</p>
+        <p>{{ form.login() }}</p>
+        <ul>
+            {% for error in form.login.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
 
-        <label for="name">Имя</label>
-        <input type="text" name="name" id="name">
+        <p>{{ form.password.label }}</p>
+        <p>{{ form.password() }}</p>
+        <ul>
+            {% for error in form.password.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
 
-        <label for="surname">Фамилия</label>
-        <input type="text" name="surname" id="surname">
+        <p>{{ form.surname.label }}</p>
+        <p>{{ form.surname() }}</p>
+        <ul>
+            {% for error in form.surname.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
 
-        <label for="dateOfBirth">Дата рождения</label>
-        <input type="date" name="dateOfBirth" id="dateOfBirth">
+        <p>{{ form.name.label }}</p>
+        <p>{{ form.name() }}</p>
+        <ul>
+            {% for error in form.name.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
 
-        <input type="submit" value="Зарегистрироваться">
+        <p>{{ form.patronym.label }}</p>
+        <p>{{ form.patronym() }}</p>
+        <ul>
+            {% for error in form.patronym.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
+
+        <p>{{ form.dateOfBirth.label }}</p>
+        <p>{{ form.dateOfBirth() }}</p>
+        <ul>
+            {% for error in form.dateOfBirth.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
+
+        <p>{{ form.submit() }}</p>
     </form>
 {% endblock %}

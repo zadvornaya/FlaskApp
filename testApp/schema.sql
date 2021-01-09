@@ -7,8 +7,9 @@ CREATE TABLE Users (
     userID INTEGER PRIMARY KEY AUTOINCREMENT,
     login VARCHAR UNIQUE NOT NULL,
     password VARCHAR NOT NULL,
-    name VARCHAR,
     surname VARCHAR,
+    name VARCHAR,
+    patronym VARCHAR,
     dateOfBirth DATE,
     progress INTEGER(2) DEFAULT 1
 );

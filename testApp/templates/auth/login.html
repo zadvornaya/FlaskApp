@@ -5,13 +5,25 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post">
-        <label for="login">Логин*</label>
-        <input name="login" id="login" required>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
 
-        <label for="password">Пароль*</label>
-        <input type="password" name="password" id="password" required>
+        <p>{{ form.login.label }}</p>
+        <p>{{ form.login() }}</p>
+        <ul>
+            {% for error in form.login.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
 
-        <input type="submit" value="Войти">
+        <p>{{ form.password.label }}</p>
+        <p>{{ form.password() }}</p>
+        <ul>
+            {% for error in form.password.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
+
+        <p>{{ form.submit() }}</p>
     </form>
 {% endblock %}
