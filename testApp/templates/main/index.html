@@ -15,8 +15,18 @@
     <div>
         <ul>
         {% if g.user %}
-            <li><a href="{{ url_for('main.test', ques=1) }}">Пройти тест</a>
-            <li><a href="{{ url_for('main.test', ques=g.user['progress']) }}">Продолжить</a>
+            {% if g.user['progress'] == 1 %}
+                <li><a href="{{ url_for('main.test', ques=1) }}">Пройти тест</a>
+            {% else %}
+                <li><a href="">Пройти тест</a>
+            {% endif %}
+
+            {% if g.user['progress'] > 1 and g.user['progress'] <= quesCount %}
+                <li><a href="{{ url_for('main.test', ques=g.user['progress']) }}">Продолжить</a>
+            {% else %}
+                <li><a href="">Продолжить</a>
+            {% endif %}
+
             <li><a href="{{ url_for('main.result') }}">Результат</a>
         {% endif %}
         </ul>

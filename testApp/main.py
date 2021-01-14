@@ -42,7 +42,13 @@ def CheckboxForm(ans, **kwargs):
 @bp.route("/")
 def index():
     """Показывает главное меню."""
-    return render_template("main/index.html")
+    # Получение общего количества вопросов
+    db = get_db()
+    quesCount = db.execute(
+        'SELECT COUNT(quesID) AS quesCount FROM Questions;'
+    ).fetchone()
+    quesCount = quesCount['quesCount']
+    return render_template("main/index.html", quesCount=quesCount)
 
 
 @bp.route("/test", methods=("GET", "POST"))
