@@ -156,7 +156,7 @@ def result():
 
     # Получение общего количества вопросов
     quesCount = db.execute(
-        'SELECT COUNT(quesID) AS quesCount FROM Questions;'
+        'SELECT COUNT(quesID) AS quesCount FROM Questions'
     ).fetchone()
     quesCount = quesCount['quesCount']
 
@@ -168,6 +168,7 @@ def result():
     # Вычисление результата
     ansData = db.execute(
         'SELECT SUM(validity) AS ansSum, MAX(answered) AS ansDate FROM Testing JOIN Answers USING(ansID)'
+        'WHERE userID = ?', (g.user['userID'],)
     ).fetchone()
     resSum = db.execute(
         'SELECT SUM(validity) AS resSum FROM Answers'
