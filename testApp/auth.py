@@ -1,10 +1,10 @@
 import functools
 
-from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
+from flask import Blueprint, g, redirect, render_template, session, url_for
 from flask_wtf import FlaskForm
 from werkzeug.security import check_password_hash, generate_password_hash
 from wtforms import StringField, PasswordField, DateField, SubmitField
-from wtforms.validators import DataRequired, InputRequired, Regexp, Length, Optional, ValidationError
+from wtforms.validators import InputRequired, Regexp, Length, Optional, ValidationError
 
 from testApp.db import get_db
 

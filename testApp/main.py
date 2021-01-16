@@ -1,8 +1,8 @@
-from flask import Blueprint, flash, g, redirect, render_template, request, url_for, session
+from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField
-from wtforms.validators import DataRequired
 from werkzeug.exceptions import abort
+from wtforms import StringField, BooleanField, SubmitField, RadioField
+from wtforms.validators import DataRequired
 
 from testApp.auth import login_required
 from testApp.db import get_db
@@ -128,6 +128,7 @@ def test():
             if form.checkboxAns_4.data:
                 ansIDs.append(answers[4]['ansID'])
 
+        # Добавление ответа в БД.
         for ansID in ansIDs:
             db.execute(
                 'INSERT INTO Testing (userID, quesID, ansID) VALUES (?, ?, ?)',
@@ -135,6 +136,7 @@ def test():
             )
             db.commit()
 
+        # Обновление прогресса пользователя.
         db.execute(
             'UPDATE Users SET progress = ? WHERE userID = ?;',
             (currentQues + 1, g.user['userID'])
@@ -162,8 +164,7 @@ def result():
 
     # Ограничение доступа к странице результатов.
     if g.user['progress'] <= int(quesCount):
-        abort(403, "Тестирование еще не завершено."
-              .format(g.user['progress']))
+        abort(403, "Тестирование еще не завершено.".format(g.user['progress']))
 
     # Вычисление результата
     ansData = db.execute(
