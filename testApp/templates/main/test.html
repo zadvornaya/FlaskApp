@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h2>{% block title %}Вопрос {{ question['quesID'] }}{% endblock %}</h2>
+{% endblock %}
+
+{% block content %}
+    <div id="ques">
+        <header>
+            <div>
+                <h3>{{ question['quesCont'] }}</h3>
+            </div>
+        </header>
+
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            {% if ansData['ansCount'] == 1 and ansData['ansSum'] == 1 %}
+                <p>
+                    {{ form.textAns.label }}
+                    {{ form.textAns() }}
+                </p>
+            {% elif ansData['ansSum'] == 1 %}
+                {% for subfield in form.radioAns %}
+                    <p>
+                        {{ subfield }}
+                        {{ subfield.label }}
+                    </p>
+                {% endfor %}
+            {% else %}
+                    <p>
+                        {{ form.checkboxAns_0 }}
+                        {{ form.checkboxAns_0.label }}
+                    </p>
+                    <p>
+                        {{ form.checkboxAns_1 }}
+                        {{ form.checkboxAns_1.label }}
+                    </p>
+                    <p>
+                        {{ form.checkboxAns_2 }}
+                        {{ form.checkboxAns_2.label }}
+                    </p>
+                    <p>
+                        {{ form.checkboxAns_3 }}
+                        {{ form.checkboxAns_3.label }}
+                    </p>
+                    <p>
+                        {{ form.checkboxAns_4 }}
+                        {{ form.checkboxAns_4.label }}
+                    </p>
+            {% endif %}
+            <p>{{ form.submit() }}</p>
+        </form>
+    </div>
+{% endblock %}

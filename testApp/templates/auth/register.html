@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h2>{% block title %}Регистрация{% endblock %}</h2>
+{% endblock %}
+
+{% block content %}
+    <form id="login-form" action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+
+        <p>{{ form.login.label }}</p>
+        <p>{{ form.login() }}</p>
+        <ul>
+            {% for error in form.login.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
+
+        <p>{{ form.password.label }}</p>
+        <p>{{ form.password() }}</p>
+        <ul>
+            {% for error in form.password.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
+
+        <p>{{ form.surname.label }}</p>
+        <p>{{ form.surname() }}</p>
+        <ul>
+            {% for error in form.surname.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
+
+        <p>{{ form.name.label }}</p>
+        <p>{{ form.name() }}</p>
+        <ul>
+            {% for error in form.name.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
+
+        <p>{{ form.patronym.label }}</p>
+        <p>{{ form.patronym() }}</p>
+        <ul>
+            {% for error in form.patronym.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
+
+        <p>{{ form.dateOfBirth.label }}</p>
+        <p>{{ form.dateOfBirth() }}</p>
+        <ul>
+            {% for error in form.dateOfBirth.errors %}
+                <li><span>[{{ error }}]</span>
+            {% endfor %}
+        </ul>
+
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Админка{% endblock %}
+
+{% block header %}
+    <h2>
+        {% if g.user %}
+            Добро пожаловать, {{g.user['name']}}!
+        {% else %}
+            Пожалуйста, войдите.
+        {% endif %}
+    </h2>
+{% endblock %}
+
+{% block content %}
+    <div id="menu">
+        <ul>
+        {% if g.user %}
+            {% if g.user['progress'] == 1 %}
+                <li><a href="{{ url_for('main.test', ques=1) }}">Пройти тест</a>
+            {% else %}
+                <li><span>Пройти тест</span>
+            {% endif %}
+
+            {% if g.user['progress'] > 1 and g.user['progress'] <= quesCount %}
+                <li><a href="{{ url_for('main.test', ques=g.user['progress']) }}">Продолжить</a>
+            {% else %}
+                <li><span>Продолжить</span>
+            {% endif %}
+
+            <li><a href="{{ url_for('main.result') }}">Результат</a>
+        {% endif %}
+        </ul>
+    </div>
+{% endblock %}
